@@ -1,44 +1,35 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Folder</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <header>
-    <h1 id="folderTitle">Folder</h1>
-    <p>Sub folder & dokumentasi</p>
-  </header>
+<a href="index.html">← Kembali ke Dashboard</a>
 
-  <main>
+<h1 id="folderTitle">Folder</h1>
 
-    <!-- FOTO LANGSUNG -->
-    <h3>📸 Foto di Folder Ini</h3>
-    <div class="top-bar">
-      <input type="file" id="photoInput" accept="image/*">
-      <button id="uploadPhotoBtn">+ Upload Foto</button>
-    </div>
-    <div id="photoContainer" class="grid"></div>
+<hr>
 
-    <hr style="margin:40px 0;">
+<h2>📂 Sub Folder</h2>
+<input type="text" id="subFolderInput" placeholder="Nama sub folder">
+<button id="addSubBtn">Tambah Sub Folder</button>
 
-    <!-- SUB FOLDER -->
-    <h3>📁 Sub Folder</h3>
-    <div class="top-bar">
-      <input type="text" id="subFolderInput" placeholder="Nama sub folder">
-      <button id="addSubBtn">+ Tambah Folder</button>
-    </div>
-    <div id="subFolderContainer" class="grid"></div>
+<div id="subFolderContainer" class="grid"></div>
 
-    <br>
-    <a href="index.html">← Kembali ke Dashboard</a>
+<hr>
 
-  </main>
+<h2>📸 Foto di Folder Ini</h2>
+<input type="file" id="photoInput" accept="image/*">
+<button id="uploadPhotoBtn">Upload Foto</button>
 
-  <script src="admin.js"></script>
+<div id="photoContainer" class="grid"></div>
+
+<!-- WAJIB: urutan script -->
+<script src="admin.js"></script>
 <script src="folder.js"></script>
+
 </body>
 </html>
