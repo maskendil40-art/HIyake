@@ -74,3 +74,17 @@ if (!window.isAdmin) {
 }
 
 renderFolders();
+// =====================
+// KUNCI VIEWER - DASHBOARD
+// =====================
+if (!window.isAdmin) {
+  const hideIds = [
+    "folderInput",
+    "addBtn"
+  ];
+
+  hideIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+}
