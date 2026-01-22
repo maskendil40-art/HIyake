@@ -20,7 +20,7 @@ function renderPhotos() {
 
     card.innerHTML = `
       <img src="${src}" style="width:100%; border-radius:12px;">
-      <button onclick="deletePhoto(${index})">Hapus</button>
+      ${window.isAdmin ? `<button onclick="deletePhoto(${index})">Hapus</button>` : ``}
     `;
 
     photoContainer.appendChild(card);
@@ -28,23 +28,29 @@ function renderPhotos() {
 }
 
 function deletePhoto(index) {
+  if (!window.isAdmin) return;
   photos.splice(index, 1);
   renderPhotos();
 }
 
-uploadPhotoBtn.addEventListener("click", () => {
-  const file = photoInput.files[0];
-  if (!file) return;
+if (window.isAdmin) {
+  uploadPhotoBtn.addEventListener("click", () => {
+    const file = photoInput.files[0];
+    if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = () => {
-    photos.push(reader.result);
-    renderPhotos();
-  };
-  reader.readAsDataURL(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      photos.push(reader.result);
+      renderPhotos();
+    };
+    reader.readAsDataURL(file);
 
-  photoInput.value = "";
-});
+    photoInput.value = "";
+  });
+} else {
+  photoInput.style.display = "none";
+  uploadPhotoBtn.style.display = "none";
+}
 
 /* ================= SUB FOLDER ================= */
 
@@ -55,7 +61,8 @@ const container = document.getElementById("subFolderContainer");
 let subFolders = [];
 
 function openSub(name) {
-  window.location.href = `subfolder.html?name=${encodeURIComponent(name)}`;
+  window.location.href =
+    `subfolder.html?name=${encodeURIComponent(name)}${window.isAdmin ? "&admin=1" : ""}`;
 }
 
 function renderSubFolders() {
@@ -69,9 +76,7 @@ function renderSubFolders() {
     card.innerHTML = `
       <div class="icon">📂</div>
       <h3>${name}</h3>
-      <button onclick="event.stopPropagation(); deleteSub(${index})">
-        Hapus
-      </button>
+      ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteSub(${index})">Hapus</button>` : ``}
     `;
 
     container.appendChild(card);
@@ -79,15 +84,23 @@ function renderSubFolders() {
 }
 
 function deleteSub(index) {
+  if (!window.isAdmin) return;
   subFolders.splice(index, 1);
   renderSubFolders();
 }
 
-btn.addEventListener("click", () => {
-  const name = input.value.trim();
-  if (name === "") return;
+if (window.isAdmin) {
+  btn.addEventListener("click", () => {
+    const name = input.value.trim();
+    if (!name) return;
 
-  subFolders.push(name);
-  input.value = "";
-  renderSubFolders();
-});
+    subFolders.push(name);
+    input.value = "";
+    renderSubFolders();
+  });
+} else {
+  input.style.display = "none";
+  btn.style.display = "none";
+}
+
+renderSubFolders();
