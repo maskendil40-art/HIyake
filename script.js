@@ -30,8 +30,9 @@ function getIcon(name) {
 }
 
 function openFolder(name) {
-  const adminParam = isAdmin ? "?admin=1" : "";
-  window.location.href = `folder.html?name=${encodeURIComponent(name)}${adminParam}`;
+  const adminParam = window.isAdmin ? "&admin=1" : "";
+  window.location.href =
+    `folder.html?name=${encodeURIComponent(name)}${adminParam}`;
 }
 
 function renderFolders() {
@@ -43,11 +44,9 @@ function renderFolders() {
     card.onclick = () => openFolder(name);
 
     card.innerHTML = `
-      <div class="icon">
-        <i class="fa-solid ${getIcon(name)}"></i>
-      </div>
+      <div class="icon"><i class="fa-solid ${getIcon(name)}"></i></div>
       <h3>${name}</h3>
-      ${isAdmin ? `<button onclick="event.stopPropagation(); deleteFolder(${index})">Hapus</button>` : ""}
+      ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteFolder(${index})">Hapus</button>` : ""}
     `;
 
     folderContainer.appendChild(card);
@@ -55,11 +54,12 @@ function renderFolders() {
 }
 
 function deleteFolder(index) {
+  if (!window.isAdmin) return;
   folders.splice(index, 1);
   renderFolders();
 }
 
-if (isAdmin && addBtn) {
+if (window.isAdmin && addBtn) {
   addBtn.addEventListener("click", () => {
     const name = folderInput.value.trim();
     if (!name) return;
@@ -67,6 +67,10 @@ if (isAdmin && addBtn) {
     folderInput.value = "";
     renderFolders();
   });
+}
+
+if (!window.isAdmin) {
+  document.querySelectorAll("button").forEach(b => b.style.display = "none");
 }
 
 renderFolders();

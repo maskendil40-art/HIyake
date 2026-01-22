@@ -1,10 +1,14 @@
+// =====================
+// AMBIL PARAMETER URL
+// =====================
 const params = new URLSearchParams(window.location.search);
-const folderName = params.get("name");
+const folderName = params.get("name") || "Folder";
 
 document.getElementById("folderTitle").innerText = folderName;
 
-/* ================= FOTO LANGSUNG ================= */
-
+// =====================
+// FOTO DI FOLDER
+// =====================
 const photoInput = document.getElementById("photoInput");
 const uploadPhotoBtn = document.getElementById("uploadPhotoBtn");
 const photoContainer = document.getElementById("photoContainer");
@@ -19,8 +23,8 @@ function renderPhotos() {
     card.className = "card";
 
     card.innerHTML = `
-      <img src="${src}" style="width:100%; border-radius:12px;">
-      ${window.isAdmin ? `<button onclick="deletePhoto(${index})">Hapus</button>` : ``}
+      <img src="${src}" style="width:100%;border-radius:12px;">
+      ${window.isAdmin ? `<button onclick="deletePhoto(${index})">Hapus</button>` : ""}
     `;
 
     photoContainer.appendChild(card);
@@ -52,21 +56,23 @@ if (window.isAdmin) {
   uploadPhotoBtn.style.display = "none";
 }
 
-/* ================= SUB FOLDER ================= */
-
-const input = document.getElementById("subFolderInput");
-const btn = document.getElementById("addSubBtn");
-const container = document.getElementById("subFolderContainer");
+// =====================
+// SUBFOLDER
+// =====================
+const subInput = document.getElementById("subFolderInput");
+const addSubBtn = document.getElementById("addSubBtn");
+const subContainer = document.getElementById("subFolderContainer");
 
 let subFolders = [];
 
 function openSub(name) {
+  const adminParam = window.isAdmin ? "&admin=1" : "";
   window.location.href =
-    `subfolder.html?name=${encodeURIComponent(name)}${window.isAdmin ? "&admin=1" : ""}`;
+    `subfolder.html?name=${encodeURIComponent(name)}${adminParam}`;
 }
 
 function renderSubFolders() {
-  container.innerHTML = "";
+  subContainer.innerHTML = "";
 
   subFolders.forEach((name, index) => {
     const card = document.createElement("div");
@@ -76,10 +82,10 @@ function renderSubFolders() {
     card.innerHTML = `
       <div class="icon">📂</div>
       <h3>${name}</h3>
-      ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteSub(${index})">Hapus</button>` : ``}
+      ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteSub(${index})">Hapus</button>` : ""}
     `;
 
-    container.appendChild(card);
+    subContainer.appendChild(card);
   });
 }
 
@@ -90,17 +96,18 @@ function deleteSub(index) {
 }
 
 if (window.isAdmin) {
-  btn.addEventListener("click", () => {
-    const name = input.value.trim();
+  addSubBtn.addEventListener("click", () => {
+    const name = subInput.value.trim();
     if (!name) return;
 
     subFolders.push(name);
-    input.value = "";
+    subInput.value = "";
     renderSubFolders();
   });
 } else {
-  input.style.display = "none";
-  btn.style.display = "none";
+  subInput.style.display = "none";
+  addSubBtn.style.display = "none";
 }
 
+renderPhotos();
 renderSubFolders();

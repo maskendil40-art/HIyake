@@ -1,46 +1,59 @@
+// =====================
+// AMBIL PARAMETER URL
+// =====================
 const params = new URLSearchParams(window.location.search);
-const title = document.getElementById("subTitle");
-const name = params.get("name");
+const subName = params.get("name") || "Sub Folder";
 
-title.innerText = name;
+document.getElementById("subTitle").innerText = subName;
 
+// =====================
+// FOTO DI SUBFOLDER
+// =====================
 const input = document.getElementById("photoInput");
 const btn = document.getElementById("uploadBtn");
 const container = document.getElementById("photoContainer");
 
 let photos = [];
 
-function renderPhotos() {
+function render() {
   container.innerHTML = "";
 
-  photos.forEach((src, index) => {
+  photos.forEach((src, i) => {
     const card = document.createElement("div");
     card.className = "card";
 
     card.innerHTML = `
-      <img src="${src}" style="width:100%; border-radius:12px;">
-      <button onclick="deletePhoto(${index})">Hapus</button>
+      <img src="${src}" style="width:100%;border-radius:12px;">
+      ${window.isAdmin ? `<button onclick="del(${i})">Hapus</button>` : ""}
     `;
 
     container.appendChild(card);
   });
 }
 
-function deletePhoto(index) {
-  photos.splice(index, 1);
-  renderPhotos();
+function del(i) {
+  if (!window.isAdmin) return;
+  photos.splice(i, 1);
+  render();
 }
 
-btn.addEventListener("click", () => {
-  const file = input.files[0];
-  if (!file) return;
+if (window.isAdmin) {
+  btn.addEventListener("click", () => {
+    const file = input.files[0];
+    if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = () => {
-    photos.push(reader.result);
-    renderPhotos();
-  };
-  reader.readAsDataURL(file);
+    const r = new FileReader();
+    r.onload = () => {
+      photos.push(r.result);
+      render();
+    };
+    r.readAsDataURL(file);
 
-  input.value = "";
-});
+    input.value = "";
+  });
+} else {
+  input.style.display = "none";
+  btn.style.display = "none";
+}
+
+render();
