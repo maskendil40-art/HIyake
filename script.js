@@ -2,9 +2,6 @@ const folderContainer = document.getElementById("folderContainer");
 const addBtn = document.getElementById("addBtn");
 const folderInput = document.getElementById("folderInput");
 
-/* =======================
-   FOLDER DEFAULT
-======================= */
 let folders = [
   "PK",
   "PM",
@@ -17,37 +14,26 @@ let folders = [
   "PBM"
 ];
 
-/* =======================
-   ICON / LOGO TIAP FOLDER
-======================= */
 function getIcon(name) {
   const icons = {
     PK: "fa-book",
     PM: "fa-calculator",
     PU: "fa-flask",
     PPU: "fa-pen",
-
     TryOut: "fa-file-circle-check",
     "Pembahasan TryOut": "fa-lightbulb",
-
     LIG: "fa-graduation-cap",
     LID: "fa-school",
     PBM: "fa-chalkboard-user"
   };
-
   return icons[name] || "fa-folder";
 }
 
-/* =======================
-   BUKA FOLDER
-======================= */
 function openFolder(name) {
-  window.location.href = `folder.html?name=${encodeURIComponent(name)}`;
+  const adminParam = isAdmin ? "?admin=1" : "";
+  window.location.href = `folder.html?name=${encodeURIComponent(name)}${adminParam}`;
 }
 
-/* =======================
-   RENDER FOLDER
-======================= */
 function renderFolders() {
   folderContainer.innerHTML = "";
 
@@ -61,36 +47,26 @@ function renderFolders() {
         <i class="fa-solid ${getIcon(name)}"></i>
       </div>
       <h3>${name}</h3>
-      <button onclick="event.stopPropagation(); deleteFolder(${index})">
-        Hapus
-      </button>
+      ${isAdmin ? `<button onclick="event.stopPropagation(); deleteFolder(${index})">Hapus</button>` : ""}
     `;
 
     folderContainer.appendChild(card);
   });
 }
 
-/* =======================
-   TAMBAH FOLDER
-======================= */
-addBtn.addEventListener("click", () => {
-  const name = folderInput.value.trim();
-  if (name === "") return;
-
-  folders.push(name);
-  folderInput.value = "";
-  renderFolders();
-});
-
-/* =======================
-   HAPUS FOLDER
-======================= */
 function deleteFolder(index) {
   folders.splice(index, 1);
   renderFolders();
 }
 
-/* =======================
-   INIT
-======================= */
+if (isAdmin && addBtn) {
+  addBtn.addEventListener("click", () => {
+    const name = folderInput.value.trim();
+    if (!name) return;
+    folders.push(name);
+    folderInput.value = "";
+    renderFolders();
+  });
+}
+
 renderFolders();
